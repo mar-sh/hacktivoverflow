@@ -1,0 +1,15 @@
+import Vue from 'vue';
+import Vuetify from 'vuetify/lib';
+import 'vuetify/src/stylus/app.styl';
+
+Vue.use(Vuetify, {
+  iconfont: 'md',
+  theme: {
+    primary: '#BDBDBD',
+    secondary: '#EEEEEE',
+    error: '#E57373',
+    info: '#80CBC4',
+    success: '#00E676',
+    warning: '#FF9100'
+  },
+});
