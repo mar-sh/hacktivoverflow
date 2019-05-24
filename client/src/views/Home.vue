@@ -1,5 +1,6 @@
 <template>
   <v-container fluid>
+
     <v-layout id="main" row wrap>
       <v-flex xs9>
         <v-layout row wrap justify-space-between>
@@ -22,6 +23,7 @@
                   v-model="key"
                   full-width
                   append-outer-icon="search"
+                  @click:append-outer="clearSearch"
                   box
                   label="Search for questions by title..."
                 ></v-text-field>
@@ -55,7 +57,9 @@ export default {
     WatchedTags,
   },
   created() {
-    this.fetchQuestions();
+    this.isLoading = true;
+    this.fetchQuestions()
+      .then(() => this.isLoading = false)
   },
   data() {
     return {
@@ -75,7 +79,7 @@ export default {
     },
     clearSearch() {
       this.searchKey = '';
-    }
+    },
   },
   computed: {
     ...mapState([

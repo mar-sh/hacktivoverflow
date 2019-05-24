@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Sidebar",
@@ -30,6 +30,7 @@ export default {
           icon: "home",
           action: () => {
             this.$router.push({ name: "home" });
+          
           }
         },
         {
@@ -39,13 +40,6 @@ export default {
             this.$router.push({ name: "my-threads" });
           }
         },
-        // {
-        //   title: "My Answer",
-        //   icon: "comment",
-        //   action: () => {
-        //     this.$router.push({ name: "my-answers" });
-        //   }
-        // }
       ]
     };
   },

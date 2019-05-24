@@ -17,6 +17,10 @@ class AnswerController {
 
     newAnswer.save()
       .then((answer) =>{
+        answer.userId = {
+          userId: answer.userId,
+          username: req.authenticated.username
+        },
         res.status(201).json(answer);
       })
       .catch((error) => {
@@ -38,6 +42,10 @@ class AnswerController {
 
     Answer.findOneAndUpdate({ _id: id }, updated, { new: true , runValidators: true })
       .then((answer) => {
+        answer.userId = {
+          userId: answer.userId,
+          username: req.authenticated.username
+        },
         res.status(200).json(answer);
       })
       .catch((err) => {

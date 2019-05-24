@@ -1,6 +1,12 @@
 <template>
   <v-container fluid fill-height>
-    <v-layout row wrap justify-center>
+    <v-layout align-center justify-center v-if="isLoading">
+      <div class="col-12">
+        <rise-loader class="text-center" :color="'black'" :size="'35px'"></rise-loader>
+      </div>
+    </v-layout>
+
+    <v-layout row wrap justify-center v-if="!isLoading">
       <v-flex xs12 sm8 md6>
         <h1 class="text-xs-center headline text-uppercase">Ask a question</h1>
         <v-form @submit.prevent="submitQuestion">
@@ -23,7 +29,13 @@
           <wysiwyg v-model="body"></wysiwyg>
           <div class="d-flex justify-space-between">
             <!-- <v-btn id="preview-question" type="submit" flat outline>Preview Question</v-btn> -->
-            <v-btn id="submit-question" type="submit" flat outline @click.prevent="submitQuestion">Submit Question</v-btn>
+            <v-btn
+              id="submit-question"
+              type="submit"
+              flat
+              outline
+              @click.prevent="submitQuestion"
+            >Submit Question</v-btn>
           </div>
         </v-form>
       </v-flex>
@@ -33,17 +45,22 @@
 
 <script>
 import backend from "@/api/backend";
+import RiseLoader from "vue-spinner/src/RiseLoader.vue";
 
 export default {
   name: "NewQuestion",
-  components: {},
+  components: {
+    RiseLoader
+  },
   data() {
     return {
+      isLoading: false,
       title: "",
       tags: [],
       items: [],
       search: "",
-      body: ""
+      body: "",
+      
     };
   },
   methods: {
@@ -58,6 +75,7 @@ export default {
       });
     },
     submitQuestion() {
+      
       const question = {
         title: this.title,
         tags: this.tags,
@@ -68,15 +86,17 @@ export default {
         "Submit Question",
         "Submit this question ?",
         () => {
+          this.isLoading = true;
           backend({
-            method: 'POST',
+            method: "POST",
             url: "/questions",
             headers: { Authorization: localStorage.getItem("accessToken") },
-            data: question,
+            data: question
           })
             .then(({ data }) => {
+              this.isLoading = false;
               console.log(data);
-              console.log('hue')
+              console.log("hue");
               this.$router.push({ name: "home" });
               alertify.success("Posted!");
             })
@@ -103,5 +123,4 @@ export default {
 #submit-question {
   margin-right: 0 !important;
 }
-
 </style>

@@ -9,7 +9,8 @@ Vue.config.productionTip = false
 
 Vue.use(wysiwyg, {
   image: {
-    uploadURL: "http://localhost:3000/actions/upload",
+    // uploadURL: "http://localhost:3000",
+    uploadURL: "https://api-hof.demarsh.dev",
     dropzoneOptions: {}
   },
 });

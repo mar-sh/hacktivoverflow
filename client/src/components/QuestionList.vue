@@ -1,6 +1,14 @@
 <template>
   <v-list class="elevation-3" three-line>
-    <template v-for="(question, index) in questionList">
+
+       <v-layout align-center justify-center v-if="isLoading">
+      <div class="col-12">
+        <beat-loader class="text-center" :color="'grey'" :size="'20px'"></beat-loader>
+      </div>
+    </v-layout>
+
+
+    <template v-for="(question, index) in questionList" v-else>
       <v-list-tile :key="question._id">
         <v-layout row wrap>
           <v-flex xs12 md2>
@@ -35,7 +43,7 @@
               </v-list-tile-title>
               <v-list-tile-sub-title>
                 <div class="body-2 pr-5">
-                  <v-chip small label v-for="tag in question.tags" :key="tag">{{tag}}</v-chip>
+                  <v-chip @click.prevent="searchForTag(tag)" close @input="searchForTag('')" small label v-for="tag in question.tags" :key="tag">{{tag}}</v-chip>
                 </div>
               </v-list-tile-sub-title>
             </v-list-tile-content>
@@ -64,23 +72,31 @@
 import { mapState, mapActions, mapMutations } from "vuex";
 import moment from "moment";
 import backend from "@/api/backend";
+import BeatLoader from "vue-spinner/src/BeatLoader.vue";
 
 export default {
   name: "QuestionList",
   props: ["keyword"],
+  components: {
+    BeatLoader,
+  },
   data() {
     return {
-      questionList: []
+      questionList: [],
+      isLoading: false,
     };
   },
   created() {
+    this.isLoading = true;
     if (this.$route.fullPath === "/") {
       this.fetchQuestions().then(() => {
         this.questionList = [...this.questions];
+        this.isLoading = false;
       });
     } else if (this.$route.fullPath === "/my-threads") {
       this.fetchUserQuestions().then(() => {
         this.questionList = [...this.userQuestions];
+        this.isLoading = false;
       });
     }
   },
@@ -137,7 +153,11 @@ export default {
           alertify.error('You can not downvote this anymore');
         });
     },
-    searchQuestion() {}
+    searchForTag(tag) {
+      this.fetchQuestionsByQuery(tag).then(() => {
+        this.questionList = [...this.search];
+      });
+    }
   },
   computed: {
     ...mapState(["questions", "search", "userQuestions"])

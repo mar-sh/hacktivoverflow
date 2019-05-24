@@ -1,6 +1,6 @@
 <template>
 <v-container fluid>
-    <v-layout id="main" row wrap>
+    <v-layout id="main" row wrap >
       <v-flex xs9>
         <v-layout row wrap justify-space-between>
           <v-flex class="pb-2" xs12 md10>

@@ -15,10 +15,10 @@
         </v-flex>
 
         <v-flex xs8 md10>
-          <span class="caption grey--text font-weight-light">Created at: {{ dateFormat }}</span>
+          <span class="caption grey--text font-weight-light">Created at: {{ dateFormat }}, by: {{ content.userId.username }}</span>
           <v-card-text>
-            <template>
-              <div id="content" v-html="content.body" ></div>
+            <template >
+              <v-flex id="content" v-html="content.body"  ></v-flex>
             </template>
           </v-card-text>
 
@@ -57,6 +57,9 @@ export default {
     model: {
       type: String
     }
+  },
+  created() {
+    console.log(this.content);
   },
   methods: {
     upvote(id) {
@@ -136,6 +139,13 @@ export default {
     },
     dateFormat() {
       return moment(this.content.createdAt).format("ll");
+    }
+  },
+  watch: {
+    'content'(val) {
+      if(!val) {
+        val = this.content
+      }
     }
   }
 };
