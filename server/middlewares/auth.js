@@ -7,9 +7,8 @@ const { verifyAccessToken } = require("../helpers/token");
 const userAuthentication = (req, res, next) => {
   try {
     if (req.headers.hasOwnProperty("authorization")) {
-      console.log(req.headers.authorization);
       const decode = verifyAccessToken(req.headers.authorization);
-      console.log(decode);
+
       User.findById(decode.id)
         .then(user => {
           if (user) {
@@ -110,7 +109,6 @@ const tagPermission = (req, res, next) => {
         }
       })
       .then((user) => {
-        console.log(user)
         if(user.watchedTags.indexOf(tag) > -1) {
           throw new Error('You already have this on watch')
         } else {
@@ -122,7 +120,25 @@ const tagPermission = (req, res, next) => {
       })
 };
 
-const userAuthorization = (req, res, next) => {};
+const userAuthorization = (req, res, next) => {
+  const { id } = req.params;
+  const Model = req.originalUrl.match('/questions')  ? Question : Answer
+  console.log(req.originalUrl)
+
+  Model.findById(id)
+    .then((model) => {
+      if(model && model.userId == req.authenticated.id) {
+        next()
+      } else if(model && model.userId !== req.authenticated.id) {
+        throw new Error('Unauthorized')
+      } else {
+        throw new Error('Not found')
+      }
+    })
+    .catch((err) => {
+      next(err);
+    })
+};
 
 module.exports = {
   userAuthentication,

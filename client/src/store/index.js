@@ -11,6 +11,7 @@ export default new Vuex.Store({
     authenticated: false,
     questions: [],
     question: {},
+    userQuestions: [],
     tags: [],
     watchedTags: [],
     search: [],

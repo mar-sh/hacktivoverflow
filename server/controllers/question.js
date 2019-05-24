@@ -19,8 +19,6 @@ class QuestionController {
       tags,
     });
 
-    console.log(newQuestion);
-
     newQuestion.save()
       .then((question) => {
         res.status(201).json(question);
@@ -31,17 +29,24 @@ class QuestionController {
   };
 
   static getAllQuestions(req, res, next) {
+    console.log(req.originalUrl)
+    let { 
+      title, 
+      tags,
+    } = req.query;
+
     let queries = {};
-
-    for(let key in req.query){
-        queries[key] = {$regex: new RegExp(req.query[key]), $options: 'ig'};
-    };
   
-    const condition = { $or: [queries] };
+    if( title || tags ){ 
+      title = new RegExp(`${title}`);
+      tags = new RegExp(`${tags}`);
+      queries = { $or: [
+        { 'title' : { $regex: title , $options: 'ig' } },
+        { 'tags' : { $regex: tags, $options: 'ig' } },
+      ]};
+    };
 
-    // console.log(condition);
-
-    Question.find(condition)
+    Question.find(queries)
       .populate({
         path: 'userId',
         select: ['username', 'email'],
@@ -79,6 +84,28 @@ class QuestionController {
       })
       .catch((error) => {
         next(error);
+      });
+  };
+
+  static getQuestionsByUserId(req, res, next) {
+    const userId = req.authenticated.id;
+
+    Question.find({ userId })
+    .populate({
+      path: 'userId',
+      select: ['username', 'email'],
+    })
+    .populate({
+      path: 'answers',
+      populate: {
+        path: 'userId',
+      },
+    })
+      .then((questions) => {
+        res.status(200).json(questions);
+      })
+      .catch((err) => {
+        next(err);
       });
   };
 

@@ -8,6 +8,9 @@ export default {
   SET_QUESTIONS(state, payload) {
     state.questions = [...payload];
   },
+  SET_USER_QUESTIONS(state, payload) {
+    state.userQuestions = [...payload];
+  },
   SET_QUESTION(state, payload) {
     state.question = {...payload};
   },

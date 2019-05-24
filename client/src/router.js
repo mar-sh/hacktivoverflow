@@ -41,11 +41,6 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/UserThread.vue'),
     },
     {
-      path: '/my-answers',
-      name: 'my-answers',
-      component: () => import(/* webpackChunkName: "about" */ './views/UserAnswer.vue'),
-    },
-    {
       path: '/thread/:id/:slug',
       name: 'thread',
       component: () => import(/* webpackChunkName: "about" */ './views/Thread.vue'),

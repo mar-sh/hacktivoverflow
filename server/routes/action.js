@@ -2,6 +2,9 @@ const express = require('express');
 
 const controller = require('../controllers/action');
 const authMiddleware = require('../middlewares/auth');
+const imageMiddleware = require('../middlewares/awsimage');
+
+const { imageUploadAWS } = imageMiddleware;
 
 const {
   userAuthentication,
@@ -11,6 +14,7 @@ const {
 } = authMiddleware;
 
 const {
+  imageUpload,
   getAllTags,
   getUserTags,
   patchUserUpvote,
@@ -22,6 +26,7 @@ const {
 const router = express.Router();
 
 router.get('/tags', getAllTags);
+router.post('/upload', imageUploadAWS, imageUpload);
 router.get('/user/tags', userAuthentication, getUserTags);
 router.post('/add/tags', userAuthentication, tagPermission, postAddWatchedTag);
 router.delete('/remove/tags', userAuthentication, deleteRemoveWatchedTag)

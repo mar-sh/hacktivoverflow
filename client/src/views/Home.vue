@@ -17,6 +17,8 @@
             <v-flex xs12 md8 :align-self-center="true">
               <v-form @submit.prevent="getSearch">
                 <v-text-field
+                  clearable
+                  @input="clearSearch"
                   v-model="key"
                   full-width
                   append-outer-icon="search"
@@ -33,9 +35,9 @@
         </v-container>
       </v-flex>
 
-      <v-flex  v-show="authenticated" xs3 px-4 :align-self-center="true">
+      <v-flex  v-show="authenticated" xs3 px-4 align-self-start>
         <!-- watched tag -->
-        <WatchedTags></WatchedTags>
+        <WatchedTags @search-tag="searchByWatchTag"></WatchedTags>
       </v-flex>
     </v-layout>
   </v-container>
@@ -68,6 +70,12 @@ export default {
     getSearch() {
       this.searchKey = this.key;
     },
+    searchByWatchTag(keyword) {
+      this.searchKey = keyword;
+    },
+    clearSearch() {
+      this.searchKey = '';
+    }
   },
   computed: {
     ...mapState([

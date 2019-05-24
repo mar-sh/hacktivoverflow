@@ -25,6 +25,7 @@ class AnswerController {
   };
 
   static putEditAnswerById(req, res, next) {
+    console.log(req.originalUrl)
     const { id } = req.params;
 
     const {
@@ -40,7 +41,7 @@ class AnswerController {
         res.status(200).json(answer);
       })
       .catch((err) => {
-        console.log(err);
+        next(err);
       });
   };
 };

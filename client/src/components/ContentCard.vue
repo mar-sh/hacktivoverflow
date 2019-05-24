@@ -15,9 +15,10 @@
         </v-flex>
 
         <v-flex xs8 md10>
+          <span class="caption grey--text font-weight-light">Created at: {{ dateFormat }}</span>
           <v-card-text>
             <template>
-              <div v-html="content.body"></div>
+              <div id="content" v-html="content.body" ></div>
             </template>
           </v-card-text>
 
@@ -67,8 +68,9 @@ export default {
         .then(({ data }) => {
           this.content.votes = data.votes;
         })
-        .catch(error => {
-          console.log(error);
+        .catch(({ response }) => {
+          alertify.error('You can not upvote this anymore');
+          
         });
     },
     downvote(id) {
@@ -80,8 +82,9 @@ export default {
         .then(({ data }) => {
           this.content.votes = data.votes;
         })
-        .catch(error => {
-          console.log(error);
+        .catch(({ response }) => {
+          alertify.error('You can not downvote this anymore');
+          
         });
     },
     editContent(id) {
@@ -92,29 +95,27 @@ export default {
       }
     },
     deleteContent(id) {
-      alertify.confirm("Delete Question ?",
+      alertify.confirm(
+        "Delete Question ?",
         "You sure you want to delete this question ? You won't be able to revert this",
         () => {
-        backend({
-          method: "PATCH",
-          url: `questions/${id}`,
-          headers: { Authorization: localStorage.getItem("accessToken") }
-        })
-          .then(({ data }) => {
-             alertify.success("Removed");
-            this.$router.push({ name: "home" });
+          backend({
+            method: "PATCH",
+            url: `questions/${id}`,
+            headers: { Authorization: localStorage.getItem("accessToken") }
           })
-          .catch(error => {
-            console.log(error);
-          });
-         
+            .then(({ data }) => {
+              alertify.success("Removed");
+              this.$router.push({ name: "home" });
+            })
+            .catch(error => {
+              console.log(error);
+            });
         },
         () => {
           alertify.message("Cancelled");
         }
       );
-
-      
     }
   },
   computed: {
@@ -132,10 +133,16 @@ export default {
         return false;
       }
       return !this.content.editable;
+    },
+    dateFormat() {
+      return moment(this.content.createdAt).format("ll");
     }
   }
 };
 </script>
 
 <style>
+#content img {
+  max-width: 300px;
+}
 </style>

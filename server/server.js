@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const cors = require('cors');
+const cron = require('node-cron');
 const dotenv = require('dotenv');
 const express = require('express');
 const lusca = require('lusca');
@@ -9,7 +10,6 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 
 dotenv.config();
-
 
 morgan.token('date', (req, res) => { 
   return moment(req.headers['date']).format('MMMM Do YYYY, h:mm:ss a'); 
@@ -39,6 +39,12 @@ const kueport = process.env.KUE_PORT || 4000;
 const port = process.env.PORT || 3000;
 
 const mainRoute = require('./routes/web');
+const cronHelper = require('./helpers/cronjob');
+
+const {
+  cronJob,
+  config,
+} = cronHelper;
 
 mongoose.connect(dbURL, { useNewUrlParser: true });
 mongoose.connection.on('error', (error) => {
@@ -58,12 +64,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(logger);
 
-app.use('/', mainRoute);
+cron.schedule('0 0 * * 1', cronJob, config);
 
+app.use('/', mainRoute);
 
 kue.app.listen(kueport);
 
 app.listen(port, () => {
   console.log(chalk.white(`Server is listening on port: ${chalk.white.bold(port)}, time: ${chalk.white.bold(moment(Date.now()).format('MMMM Do YYYY, h:mm:ss a'))}`));
 });
-

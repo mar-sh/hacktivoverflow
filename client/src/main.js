@@ -7,7 +7,12 @@ import wysiwyg from 'vue-wysiwyg';
 
 Vue.config.productionTip = false
 
-Vue.use(wysiwyg, {});
+Vue.use(wysiwyg, {
+  image: {
+    uploadURL: "http://localhost:3000/actions/upload",
+    dropzoneOptions: {}
+  },
+});
 
 new Vue({
   router,

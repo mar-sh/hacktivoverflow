@@ -4,6 +4,11 @@ const Answer = require('../models/Answer');
 
 class ActionController {
 
+  static imageUpload(req, res) {
+    console.log(req.file);
+    res.send(req.file.location);
+  };
+
   static getAllTags(req, res, next) {
     Question.find({})
       .then((questions) => {

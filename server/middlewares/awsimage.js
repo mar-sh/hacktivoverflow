@@ -19,9 +19,11 @@ const upload = multer({
     acl: "public-read",
     contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata(req, file, cb) {
+      console.log(file, 'meta')
       cb(null, { fieldName: file.fieldname });
     },
     key(req, file, cb) {
+      console.log(file, 'key')
       const original = path.parse(file.originalname).name;
       const hash = crypto
         .createHash("md5")
@@ -34,6 +36,6 @@ const upload = multer({
   }),
 });
 
-const imageUploadAWS = upload.single('image');
+const imageUploadAWS = upload.single('file');
 
 module.exports = { imageUploadAWS };

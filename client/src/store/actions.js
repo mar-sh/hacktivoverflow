@@ -13,6 +13,19 @@ export default {
         console.log(error);
       });
   },
+  fetchUserQuestions(context) {
+    return backend({
+      method: 'GET',
+      url: '/questions/users',
+      headers: { Authorization: localStorage.getItem('accessToken') }
+    })
+      .then(({ data }) => {
+        context.commit('SET_USER_QUESTIONS', data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  },
   fetchQuestion(context, questionId) {
     return backend({
       method: 'GET',
@@ -28,7 +41,7 @@ export default {
   fetchQuestionsByQuery(context, query) {
     return backend({
       method: 'GET',
-      url: `/questions/?title=${query}`,
+      url: `/questions/?title=${query}&tags=${query}`,
     })
       .then(({ data }) => {
         console.log(data, 'query');

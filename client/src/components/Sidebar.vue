@@ -39,13 +39,13 @@ export default {
             this.$router.push({ name: "my-threads" });
           }
         },
-        {
-          title: "My Answer",
-          icon: "comment",
-          action: () => {
-            this.$router.push({ name: "my-answers" });
-          }
-        }
+        // {
+        //   title: "My Answer",
+        //   icon: "comment",
+        //   action: () => {
+        //     this.$router.push({ name: "my-answers" });
+        //   }
+        // }
       ]
     };
   },
